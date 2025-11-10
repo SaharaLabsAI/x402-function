@@ -66,14 +66,10 @@
     <!-- Vendor -->
     <dependency>
       <groupId>ai.saharalabs.x402-function</groupId>
-      <artifactId>x402-vendor-deploy-spring-boot-starter</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>ai.saharalabs.x402-function</groupId>
       <artifactId>hive-vendor-spring-boot-starter</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
+    <!-- Vendor end -->
   </dependencies>
 
   <dependencyManagement>
