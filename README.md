@@ -26,7 +26,7 @@ Refer to: [ryan-alexander-zhang/x402-server-sdk](https://github.com/ryan-alexand
 ```bash
 mvn clean spring-boot:run -f backend/pom.xml
 ```
-Access API docs at: `http://localhost:8086/doc.html` (Knife4j)
+Access API docs at: `http://localhost:{PORT}/doc.html` (Knife4j)
 
 ### Configuration
 
