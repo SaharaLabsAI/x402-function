@@ -7,7 +7,7 @@ and flexible configuration for cloud-native environments.
 ## Features
 - **x402 Protocol Integration**: Pay-per-use API endpoints with USDC micropayment support.
 - **Serverless Deployment**: x402-function implementation with Sahara's Hive Serverless infrastructure. Automated deployment via GitHub repository to Serverless vendor. (Hive/Vercel for example)
-- **Kubernetes Ready**: ConfigMap, Service, and scalable deployment tuuuuuemplates.
+- **Kubernetes Ready**: ConfigMap, Service, and scalable deployment yaml.
 
 ## Architecture
 - **x402** for micropayments and pay-per-use API management
