@@ -66,8 +66,8 @@ public class HiveAutoConfiguration {
   }
 
   @Bean
-  @ConditionalOnMissingBean(name = "hiveDeployer")
-  public HiveDeployer hiveDeployer(HiveHttpClient hiveHttpClient) {
+  @ConditionalOnMissingBean(IDeployVendor.class)
+  public IDeployVendor hiveDeployer(HiveHttpClient hiveHttpClient) {
     log.info("Loaded hive deployer...");
     return new HiveDeployer(hiveHttpClient);
   }
