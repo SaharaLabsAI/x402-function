@@ -15,6 +15,7 @@
     <lombok.version>1.18.30</lombok.version>
     <spring-boot.version>3.2.4</spring-boot.version>
     <x402-server-sdk.version>1.0-SNAPSHOT</x402-server-sdk.version>
+    <x402-function.vendor-spi.version>1.0-SNAPSHOT</x402-function.vendor-spi.version>
   </properties>
 
   <dependencies>
@@ -22,7 +23,6 @@
     <dependency>
       <groupId>ai.saharalabs.x402-function</groupId>
       <artifactId>vendor-spi</artifactId>
-      <version>1.0-SNAPSHOT</version>
     </dependency>
     <!-- x402 Vendor SPI End -->
 
@@ -30,7 +30,6 @@
     <dependency>
       <groupId>ai.saharalabs.x402-function</groupId>
       <artifactId>x402-spring-boot-starter</artifactId>
-      <version>1.0-SNAPSHOT</version>
     </dependency>
     <!-- x402 Server Starter End -->
 
@@ -58,14 +57,13 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.15.4</version>
-      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
       <optional>true</optional>
+      <scope>provided</scope>
     </dependency>
     <!-- Spring Boot Dependencies End -->
   </dependencies>
@@ -80,6 +78,23 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!-- Spring Framework dependencies end -->
+
+      <!-- x402 Vendor SPI -->
+      <dependency>
+        <groupId>ai.saharalabs.x402-function</groupId>
+        <artifactId>vendor-spi</artifactId>
+        <version>${x402-function.vendor-spi.version}</version>
+      </dependency>
+      <!-- x402 Vendor SPI End -->
+
+      <!-- x402 Server Starter -->
+      <dependency>
+        <groupId>ai.saharalabs.x402-function</groupId>
+        <artifactId>x402-spring-boot-starter</artifactId>
+        <version>${x402-server-sdk.version}</version>
+      </dependency>
+      <!-- x402 Server Starter End -->
     </dependencies>
   </dependencyManagement>
 
