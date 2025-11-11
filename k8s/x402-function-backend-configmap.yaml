@@ -20,10 +20,9 @@ data:
     x402.asset=0x036CbD53842c5426634e7929541eC2318f3dCF7e
     x402.max-timeout-seconds=30
     x402.facilitator-base-url=https://www.x402.org/facilitator
-    
-    # deploy vendor
-    x402.deploy.vendor=
+        
     # for hive api
+    hive.api.enable=true
     hive.api.base-url=${HIVE_API_BASE_URL:http://localhost:8080}
     hive.api.account=${HIVE_API_ACCOUNT:account-placeholder}
     hive.api.token=${HIVE_API_TOKEN:token-placeholder}
