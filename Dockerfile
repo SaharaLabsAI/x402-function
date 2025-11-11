@@ -27,7 +27,7 @@ ENV DEFAULT_JAVA_OPTS="\
 
 # Copy the locally built Spring Boot executable JAR
 # Assumes `mvn clean package` has been run and the JAR is in the target/ directory
-COPY --chown=appuser:appgroup api-java/target/x402-function-*.jar app.jar
+COPY --chown=appuser:appgroup x402-function-rest-demo/target/x402-function-rest-demo-*.jar app.jar
 
 # Switch to non-root user
 USER appuser:appgroup
