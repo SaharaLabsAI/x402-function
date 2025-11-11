@@ -14,19 +14,26 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <lombok.version>1.18.30</lombok.version>
     <spring-boot.version>3.2.4</spring-boot.version>
+    <x402-function.vendor-spi.version>1.0-SNAPSHOT</x402-function.vendor-spi.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>ai.saharalabs.x402-function</groupId>
       <artifactId>vendor-spi</artifactId>
-      <version>1.0-SNAPSHOT</version>
     </dependency>
+
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>${lombok.version}</version>
       <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
       <optional>true</optional>
     </dependency>
 
@@ -37,22 +44,20 @@
     </dependency>
 
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <optional>true</optional>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.15.4</version>
-      <scope>compile</scope>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
       <optional>true</optional>
+      <scope>provided</scope>
     </dependency>
     <!-- Spring Boot Dependencies End -->
   </dependencies>
@@ -67,6 +72,12 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>ai.saharalabs.x402-function</groupId>
+        <artifactId>vendor-spi</artifactId>
+        <version>${x402-function.vendor-spi.version}</version>
+      </dependency>
+      <!-- Spring Framework dependencies end-->
     </dependencies>
   </dependencyManagement>
 
