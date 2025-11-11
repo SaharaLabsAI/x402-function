@@ -1,7 +1,7 @@
 # x402-function-spring-boot-starter
 
 ## Overview
-This project provides a thin implementation layer for integrating x402 Server functionality into Spring Boot applications. In the future, it may also incorporate other implementations from facilitator.
+This project provides a thin implementation layer for integrating x402 Server functionality into Spring Boot applications.
 
 ## Installation
 Add the following dependency to your Maven `pom.xml`:

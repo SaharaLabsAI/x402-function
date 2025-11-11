@@ -21,23 +21,44 @@ and flexible configuration for cloud-native environments.
 - Docker & Kubernetes (for cloud deployment)
 
 ### Local Development
-Refer to: [ryan-alexander-zhang/x402-server-sdk](https://github.com/ryan-alexander-zhang/x402-server-sdk) for instructions on installing the x402 SDK required for local development.
+1. Clone the repository:
+   ```bash
+   git clone
+   ```
+2. Install vendor SPI dependency:
+    ```bash
+    mvn clean install -DskipTests  -f ./vendor-spi/pom.xml
+    ```
+3. Install x402 Server SDK:
+    ```bash
+    mvn clean install -DskipTests  -f ./x402-spring-boot-starter/pom.xml
+    ```
+4. Install Hive Vendor Spring Boot Starter. (Skip if you want to develop your own vendor. Refer to the [README.md](vendor-spi/README.md))
+    ```bash
+    mvn clean install -DskipTests  -f ./hive-vendor-spring-boot-starter/pom.xml
+    ```
+5. Install x402 function Spring Boot Starter.
+    ```bash
+    mvn clean install -DskipTests  -f ./x402-function-spring-boot-starter/pom.xml
+    ```
+6. Run the demo backend.
+    ```bash
+    mvn clean spring-boot:run -f ./x402-function-rest-demo/pom.xml
+    ```
 
-```bash
-mvn clean spring-boot:run -f backend/pom.xml
-```
 Access API docs at: `http://localhost:{PORT}/doc.html` (Knife4j)
 
 ### Configuration
 
-Edit `backend/src/main/resources/application-local.properties` for local/dev. Key descriptions:
+Create `backend/src/main/resources/application-local.properties` for local/dev. Key descriptions:
 
 - `logging.level.root`: Sets the root logging level (e.g., DEBUG, INFO).
-- `demo.git-repo.url`: Git repository URL for demo service deployment.
-- `x402.facilitator.base-url`: Base URL for x402 facilitator service.
-- `x402.default-network`: Default blockchain network for x402 transactions.
-- `x402.default-payto`: Default pay-to address for micropayments.
-- `x402.deploy.vendor`: Config the deploy vendor.
+- `x402.enabled`: Enables or disables the x402 payment protocol for API endpoints. Set to `true` to require micropayments for protected routes.
+- `x402.default-pay-to`: The default payee address (e.g., wallet address) for receiving payments.
+- `x402.network`: The blockchain network identifier (e.g., `base-sepolia`) used for payment settlement.
+- `x402.asset`: The contract address.
+- `x402.max-timeout-seconds`: Maximum time (in seconds) to wait for payment completion before timing out.
+- `x402.facilitator-base-url`
 - `hive.api.base-url`: Base URL for Hive Serverless API.
 - `hive.api.account`: Hive account identifier for API access.
 - `hive.api.token`: API token for authenticating Hive requests.
@@ -53,7 +74,6 @@ Edit `backend/src/main/resources/application-local.properties` for local/dev. Ke
 For Kubernetes, use `k8s/x402-function-backend-configmap.yaml` and mount as config.
 
 ## Dependencies
-- x402 Protocol Server SDK: [ryan-alexander-zhang/x402-server-sdk](https://github.com/ryan-alexander-zhang/x402-server-sdk)
 - Spring Boot: [spring-projects/spring-boot](https://github.com/spring-projects/spring-boot)
 - Knife4j: [xiaoymin/knife4j](https://github.com/xiaoymin/knife4j)
 - Lombok: [projectlombok/lombok](https://github.com/projectlombok/lombok)
@@ -78,3 +98,6 @@ GET /apis/x402/v1/services/{id}
 
 ## License
 MIT License. See [LICENSE](LICENSE) for details.
+
+## Notice
+See [NOTICE](NOTICE) for details.
