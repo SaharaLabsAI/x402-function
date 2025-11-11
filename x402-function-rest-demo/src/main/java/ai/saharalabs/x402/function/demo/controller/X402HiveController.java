@@ -62,16 +62,16 @@ public class X402HiveController {
     return ResponseEntity.status(HttpStatus.CREATED).body(SingleResponse.of(service.create(cmd)));
   }
 
+  // TODO for demo purpose, generate a unique service name
+  private String generateServiceName(String prefix) {
+    long timestamp = System.currentTimeMillis();
+    return prefix + "-" + timestamp;
+  }
+
   @Operation(summary = "Get service status", description = "Gets the status of a service by its ID.")
   @GetMapping("/services/{id}")
   public ResponseEntity<SingleResponse<ServiceDTO>> statusServiceById(
       @PathVariable("id") String id) {
     return ResponseEntity.ok(SingleResponse.of(service.status(id)));
-  }
-
-  // TODO for demo purpose, generate a unique service name
-  private String generateServiceName(String prefix) {
-    long timestamp = System.currentTimeMillis();
-    return prefix + "-" + timestamp;
   }
 }

@@ -25,103 +25,103 @@
   ~ SOFTWARE.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-
-  <groupId>ai.saharalabs.x402-function</groupId>
   <artifactId>x402-function-spring-boot-starter</artifactId>
-  <version>1.0-SNAPSHOT</version>
-
-  <properties>
-    <maven.compiler.source>21</maven.compiler.source>
-    <maven.compiler.target>21</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <lombok.version>1.18.30</lombok.version>
-    <spring-boot.version>3.2.4</spring-boot.version>
-    <x402-server-sdk.version>1.0-SNAPSHOT</x402-server-sdk.version>
-    <x402-function.vendor-spi.version>1.0-SNAPSHOT</x402-function.vendor-spi.version>
-  </properties>
 
   <dependencies>
     <!-- x402 Vendor SPI -->
     <dependency>
-      <groupId>ai.saharalabs.x402-function</groupId>
       <artifactId>vendor-spi</artifactId>
+      <groupId>ai.saharalabs.x402-function</groupId>
     </dependency>
     <!-- x402 Vendor SPI End -->
 
     <!-- x402 Server Starter -->
     <dependency>
-      <groupId>ai.saharalabs.x402-function</groupId>
       <artifactId>x402-spring-boot-starter</artifactId>
+      <groupId>ai.saharalabs.x402-function</groupId>
     </dependency>
     <!-- x402 Server Starter End -->
 
     <dependency>
-      <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>${lombok.version}</version>
-      <scope>provided</scope>
+      <groupId>org.projectlombok</groupId>
       <optional>true</optional>
+      <scope>provided</scope>
+      <version>${lombok.version}</version>
     </dependency>
 
     <!--JSR 303-->
     <dependency>
-      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
+      <groupId>org.springframework.boot</groupId>
     </dependency>
     <!--JSR 303 end-->
 
     <!-- Spring Boot Dependencies -->
     <dependency>
-      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-autoconfigure</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.springframework.boot</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>jackson-databind</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+    </dependency>
+
+    <dependency>
       <artifactId>spring-boot-configuration-processor</artifactId>
+      <groupId>org.springframework.boot</groupId>
       <optional>true</optional>
       <scope>provided</scope>
     </dependency>
     <!-- Spring Boot Dependencies End -->
   </dependencies>
-
   <dependencyManagement>
     <dependencies>
       <!-- Spring Framework dependencies -->
       <dependency>
-        <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
-        <type>pom</type>
+        <groupId>org.springframework.boot</groupId>
         <scope>import</scope>
+        <type>pom</type>
+        <version>${spring-boot.version}</version>
       </dependency>
       <!-- Spring Framework dependencies end -->
 
       <!-- x402 Vendor SPI -->
       <dependency>
-        <groupId>ai.saharalabs.x402-function</groupId>
         <artifactId>vendor-spi</artifactId>
+        <groupId>ai.saharalabs.x402-function</groupId>
         <version>${x402-function.vendor-spi.version}</version>
       </dependency>
       <!-- x402 Vendor SPI End -->
 
       <!-- x402 Server Starter -->
       <dependency>
-        <groupId>ai.saharalabs.x402-function</groupId>
         <artifactId>x402-spring-boot-starter</artifactId>
+        <groupId>ai.saharalabs.x402-function</groupId>
         <version>${x402-server-sdk.version}</version>
       </dependency>
       <!-- x402 Server Starter End -->
     </dependencies>
   </dependencyManagement>
+  <groupId>ai.saharalabs.x402-function</groupId>
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <properties>
+    <lombok.version>1.18.30</lombok.version>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <spring-boot.version>3.2.4</spring-boot.version>
+    <x402-function.vendor-spi.version>1.0-SNAPSHOT</x402-function.vendor-spi.version>
+    <x402-server-sdk.version>1.0-SNAPSHOT</x402-server-sdk.version>
+  </properties>
+
+  <version>1.0-SNAPSHOT</version>
 
 </project>

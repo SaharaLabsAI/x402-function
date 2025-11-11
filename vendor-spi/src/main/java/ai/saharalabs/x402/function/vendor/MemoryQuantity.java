@@ -99,8 +99,14 @@ public record MemoryQuantity(String value) {
     }
   }
 
-  public static MemoryQuantity of(String value) {
-    return new MemoryQuantity(value);
+  public MemoryQuantity patch(MemoryQuantity other) {
+    if (other == null) {
+      return this;
+    }
+    if (Objects.equals(this, other)) {
+      return this;
+    }
+    return this.patch(other.value);
   }
 
   public MemoryQuantity patch(String newValue) {
@@ -110,13 +116,7 @@ public record MemoryQuantity(String value) {
     return MemoryQuantity.of(newValue);
   }
 
-  public MemoryQuantity patch(MemoryQuantity other) {
-    if (other == null) {
-      return this;
-    }
-    if (Objects.equals(this, other)) {
-      return this;
-    }
-    return this.patch(other.value);
+  public static MemoryQuantity of(String value) {
+    return new MemoryQuantity(value);
   }
 }

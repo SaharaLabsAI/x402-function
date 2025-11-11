@@ -34,7 +34,7 @@ import ai.saharalabs.x402.function.converter.ServiceConverter;
 import ai.saharalabs.x402.function.vendor.DeploymentStatus;
 import ai.saharalabs.x402.function.vendor.IDeployVendor;
 
-public class ServiceImpl implements IService{
+public class ServiceImpl implements IService {
 
   private final IDeployVendor deployVendor;
 

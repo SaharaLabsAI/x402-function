@@ -33,9 +33,6 @@ import lombok.Setter;
 @Setter
 public class DeploymentResourceConfig {
 
-  private Resource request;
-  private Resource limit;
-
   public static final DeploymentResourceConfig DEFAULT;
 
   static {
@@ -44,6 +41,9 @@ public class DeploymentResourceConfig {
     config.setLimit(Resource.of("1", "128Mi"));
     DEFAULT = config;
   }
+
+  private Resource request;
+  private Resource limit;
 
   public static DeploymentResourceConfig defaultConfig() {
     return DEFAULT;

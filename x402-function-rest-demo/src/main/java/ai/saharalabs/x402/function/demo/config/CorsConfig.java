@@ -1,7 +1,5 @@
 package ai.saharalabs.x402.function.demo.config;
 
-import ai.saharalabs.x402.function.vendor.IDeployVendor;
-import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -17,7 +15,8 @@ public class CorsConfig implements WebMvcConfigurer {
 
   @Override
   public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/**").allowedOriginPatterns(appCorsProps.getOrigins().toArray(String[]::new))
+    registry.addMapping("/**")
+        .allowedOriginPatterns(appCorsProps.getOrigins().toArray(String[]::new))
         .allowedMethods(appCorsProps.getMethods().toArray(String[]::new))
         .allowedHeaders(appCorsProps.getHeaders().toArray(String[]::new))
         .allowCredentials(Boolean.TRUE.equals(appCorsProps.getCredentials()))

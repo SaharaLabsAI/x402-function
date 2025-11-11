@@ -25,14 +25,72 @@
   ~ SOFTWARE.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-
-  <groupId>ai.saharalabs.x402-function</groupId>
   <artifactId>x402-spring-boot-starter</artifactId>
-  <version>1.0-SNAPSHOT</version>
+
+  <dependencies>
+    <dependency>
+      <artifactId>jackson-databind</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>slf4j-api</artifactId>
+      <groupId>org.slf4j</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+      <optional>true</optional>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Spring Boot Dependencies -->
+    <dependency>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>spring-webmvc</artifactId>
+      <groupId>org.springframework</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <optional>true</optional>
+      <scope>provided</scope>
+    </dependency>
+    <!-- Spring Boot Dependencies End -->
+
+    <!-- servlet -->
+    <dependency>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <groupId>jakarta.servlet</groupId>
+      <scope>provided</scope>
+    </dependency>
+    <!-- servlet end -->
+  </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <!-- Spring Framework dependencies -->
+      <dependency>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <scope>import</scope>
+        <type>pom</type>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <!-- Spring Framework dependencies end -->
+    </dependencies>
+  </dependencyManagement>
+  <groupId>ai.saharalabs.x402-function</groupId>
+
+  <modelVersion>4.0.0</modelVersion>
 
   <properties>
     <maven.compiler.source>21</maven.compiler.source>
@@ -41,65 +99,7 @@
     <spring-boot.version>3.2.4</spring-boot.version>
   </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
 
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <scope>provided</scope>
-      <optional>true</optional>
-    </dependency>
-
-    <!-- Spring Boot Dependencies -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-autoconfigure</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-webmvc</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
-      <optional>true</optional>
-      <scope>provided</scope>
-    </dependency>
-    <!-- Spring Boot Dependencies End -->
-
-    <!-- servlet -->
-    <dependency>
-      <groupId>jakarta.servlet</groupId>
-      <artifactId>jakarta.servlet-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <!-- servlet end -->
-  </dependencies>
-
-
-  <dependencyManagement>
-    <dependencies>
-      <!-- Spring Framework dependencies -->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <!-- Spring Framework dependencies end -->
-    </dependencies>
-  </dependencyManagement>
+  <version>1.0-SNAPSHOT</version>
 
 </project>

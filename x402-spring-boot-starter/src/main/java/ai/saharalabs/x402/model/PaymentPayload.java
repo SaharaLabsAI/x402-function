@@ -43,6 +43,14 @@ public class PaymentPayload {
   public Map<String, Object> payload; // scheme‑specific map
 
   /**
+   * Decode from the header.
+   */
+  public static PaymentPayload fromHeader(String header) throws IOException {
+    byte[] decoded = Base64.getDecoder().decode(header);
+    return Json.MAPPER.readValue(decoded, PaymentPayload.class);
+  }
+
+  /**
    * Serialise and base64‑encode for the X‑PAYMENT header.
    */
   public String toHeader() {
@@ -52,13 +60,5 @@ public class PaymentPayload {
     } catch (IOException e) {
       throw new IllegalStateException("Unable to encode payment header", e);
     }
-  }
-
-  /**
-   * Decode from the header.
-   */
-  public static PaymentPayload fromHeader(String header) throws IOException {
-    byte[] decoded = Base64.getDecoder().decode(header);
-    return Json.MAPPER.readValue(decoded, PaymentPayload.class);
   }
 }

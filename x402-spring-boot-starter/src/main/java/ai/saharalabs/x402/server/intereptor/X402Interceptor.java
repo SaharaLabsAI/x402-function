@@ -210,6 +210,34 @@ public class X402Interceptor implements HandlerInterceptor {
 
   /* ======================== Resolve Annotation ======================== */
 
+  private String extractPayerFromPayload(PaymentPayload payload) {
+    try {
+      ExactSchemePayload exactPayload = Json.MAPPER.convertValue(payload.payload,
+          ExactSchemePayload.class);
+      return exactPayload.authorization != null ? exactPayload.authorization.from : null;
+    } catch (Exception ex) {
+      try {
+        Object authorization = payload.payload.get("authorization");
+        if (authorization instanceof Map<?, ?> map) {
+          Object from = map.get("from");
+          return from instanceof String ? (String) from : null;
+        }
+      } catch (Exception ignore) {
+      }
+      return null;
+    }
+  }
+
+  /* ======================== helpers ======================== */
+
+  private String createPaymentResponseHeader(SettlementResponse sr, String payer) throws Exception {
+    SettlementResponseHeader settlementHeader = new SettlementResponseHeader(true,
+        sr.txHash != null ? sr.txHash : "", sr.networkId != null ? sr.networkId : "", payer);
+
+    String jsonString = Json.MAPPER.writeValueAsString(settlementHeader);
+    return Base64.getEncoder().encodeToString(jsonString.getBytes(StandardCharsets.UTF_8));
+  }
+
   @Nullable
   private X402Payment resolveAnnotation(Object handler) {
     if (!(handler instanceof HandlerMethod hm)) {
@@ -223,8 +251,6 @@ public class X402Interceptor implements HandlerInterceptor {
 
     return hm.getBeanType().getAnnotation(X402Payment.class);
   }
-
-  /* ======================== helpers ======================== */
 
   private PaymentRequirements buildRequirements(String path, X402Payment ann) {
     String priceStr = ann.price();
@@ -287,31 +313,5 @@ public class X402Interceptor implements HandlerInterceptor {
     resp.setContentType("application/json");
     resp.getWriter().write("{\"error\":\"" + message.replace("\"", "\\\"") + "\"}");
     resp.flushBuffer();
-  }
-
-  private String createPaymentResponseHeader(SettlementResponse sr, String payer) throws Exception {
-    SettlementResponseHeader settlementHeader = new SettlementResponseHeader(true,
-        sr.txHash != null ? sr.txHash : "", sr.networkId != null ? sr.networkId : "", payer);
-
-    String jsonString = Json.MAPPER.writeValueAsString(settlementHeader);
-    return Base64.getEncoder().encodeToString(jsonString.getBytes(StandardCharsets.UTF_8));
-  }
-
-  private String extractPayerFromPayload(PaymentPayload payload) {
-    try {
-      ExactSchemePayload exactPayload = Json.MAPPER.convertValue(payload.payload,
-          ExactSchemePayload.class);
-      return exactPayload.authorization != null ? exactPayload.authorization.from : null;
-    } catch (Exception ex) {
-      try {
-        Object authorization = payload.payload.get("authorization");
-        if (authorization instanceof Map<?, ?> map) {
-          Object from = map.get("from");
-          return from instanceof String ? (String) from : null;
-        }
-      } catch (Exception ignore) {
-      }
-      return null;
-    }
   }
 }

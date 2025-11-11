@@ -79,8 +79,14 @@ public record CpuQuantity(String value) {
     }
   }
 
-  public static CpuQuantity of(String value) {
-    return new CpuQuantity(value);
+  public CpuQuantity patch(CpuQuantity other) {
+    if (other == null) {
+      return this;
+    }
+    if (Objects.equals(this, other)) {
+      return this;
+    }
+    return this.patch(other.value);
   }
 
   public CpuQuantity patch(String newValue) {
@@ -90,13 +96,7 @@ public record CpuQuantity(String value) {
     return CpuQuantity.of(newValue);
   }
 
-  public CpuQuantity patch(CpuQuantity other) {
-    if (other == null) {
-      return this;
-    }
-    if (Objects.equals(this, other)) {
-      return this;
-    }
-    return this.patch(other.value);
+  public static CpuQuantity of(String value) {
+    return new CpuQuantity(value);
   }
 }

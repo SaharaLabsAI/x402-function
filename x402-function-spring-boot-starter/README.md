@@ -1,9 +1,12 @@
 # x402-function-spring-boot-starter
 
 ## Overview
-This project provides a thin implementation layer for integrating x402 Server functionality into Spring Boot applications.
+
+This project provides a thin implementation layer for integrating x402 Server functionality into
+Spring Boot applications.
 
 ## Installation
+
 Add the following dependency to your Maven `pom.xml`:
 
 ```xml
@@ -15,6 +18,7 @@ Add the following dependency to your Maven `pom.xml`:
 ```
 
 ## Configuration
+
 Configure the starter in your `application.properties` file:
 
 ```properties
@@ -28,6 +32,7 @@ x402.facilitator-base-url=https://www.x402.org/facilitator
 ```
 
 ## Usage
+
 Annotate your Spring Boot application to enable the x402 function starter:
 
 ```java
@@ -39,10 +44,13 @@ public class Application {
 }
 ```
 
-You can now inject and use x402-related beans provided by the starter in your services or controllers.
+You can now inject and use x402-related beans provided by the starter in your services or
+controllers.
 
 ## License
+
 See the LICENSE file for details.
 
 ## Notice
+
 See the NOTICE file for details.

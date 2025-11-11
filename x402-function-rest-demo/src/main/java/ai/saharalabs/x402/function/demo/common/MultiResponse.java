@@ -9,28 +9,6 @@ public class MultiResponse<T> extends Response {
 
   private Collection<T> data;
 
-  public List<T> getData() {
-    if (null == data) {
-      return Collections.emptyList();
-    }
-    if (data instanceof List) {
-      return (List<T>) data;
-    }
-    return new ArrayList<>(data);
-  }
-
-  public void setData(Collection<T> data) {
-    this.data = data;
-  }
-
-  public boolean isEmpty() {
-    return data == null || data.isEmpty();
-  }
-
-  public boolean isNotEmpty() {
-    return !isEmpty();
-  }
-
   public static MultiResponse buildSuccess() {
     MultiResponse response = new MultiResponse();
     response.setSuccess(true);
@@ -50,5 +28,27 @@ public class MultiResponse<T> extends Response {
     response.setSuccess(true);
     response.setData(data);
     return response;
+  }
+
+  public List<T> getData() {
+    if (null == data) {
+      return Collections.emptyList();
+    }
+    if (data instanceof List) {
+      return (List<T>) data;
+    }
+    return new ArrayList<>(data);
+  }
+
+  public void setData(Collection<T> data) {
+    this.data = data;
+  }
+
+  public boolean isNotEmpty() {
+    return !isEmpty();
+  }
+
+  public boolean isEmpty() {
+    return data == null || data.isEmpty();
   }
 }

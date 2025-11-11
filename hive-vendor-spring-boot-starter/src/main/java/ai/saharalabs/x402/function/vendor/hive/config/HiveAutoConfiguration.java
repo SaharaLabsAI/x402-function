@@ -85,19 +85,6 @@ public class HiveAutoConfiguration {
         .build();
   }
 
-  @Bean
-  @ConditionalOnMissingBean
-  public HiveHttpClient hiveHttpClient(RestClient hiveRestClient) {
-    return new HiveHttpClient(hiveRestClient);
-  }
-
-  @Bean
-  @ConditionalOnMissingBean(IDeployVendor.class)
-  public IDeployVendor hiveDeployer(HiveHttpClient hiveHttpClient) {
-    log.info("Loaded hive deployer...");
-    return new HiveDeployer(hiveHttpClient);
-  }
-
   private String readBodySafely(ClientHttpResponse response) {
     try (InputStream is = response.getBody()) {
       return new String(is.readAllBytes(), StandardCharsets.UTF_8);
@@ -116,5 +103,18 @@ public class HiveAutoConfiguration {
     } catch (Exception e) {
       return null;
     }
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public HiveHttpClient hiveHttpClient(RestClient hiveRestClient) {
+    return new HiveHttpClient(hiveRestClient);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(IDeployVendor.class)
+  public IDeployVendor hiveDeployer(HiveHttpClient hiveHttpClient) {
+    log.info("Loaded hive deployer...");
+    return new HiveDeployer(hiveHttpClient);
   }
 }
