@@ -5,7 +5,7 @@ import ai.saharalabs.x402.function.api.command.ServiceCreationCmd;
 import ai.saharalabs.x402.function.api.dto.ServiceCreateDTO;
 import ai.saharalabs.x402.function.api.dto.ServiceDTO;
 import ai.saharalabs.x402.function.demo.common.SingleResponse;
-import com.ryan.x402.annotation.X402Payment;
+import ai.saharalabs.x402.server.annotation.X402Payment;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Value;

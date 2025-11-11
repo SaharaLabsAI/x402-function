@@ -5,49 +5,22 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>ai.saharalabs.x402-function</groupId>
-  <artifactId>x402-function-spring-boot-starter</artifactId>
+  <artifactId>x402-spring-boot-starter</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <properties>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <lombok.version>1.18.30</lombok.version>
     <spring-boot.version>3.2.4</spring-boot.version>
-    <x402-server-sdk.version>1.0-SNAPSHOT</x402-server-sdk.version>
   </properties>
 
   <dependencies>
-    <!-- x402 Vendor SPI -->
     <dependency>
-      <groupId>ai.saharalabs.x402-function</groupId>
-      <artifactId>vendor-spi</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.17.0</version>
     </dependency>
-    <!-- x402 Vendor SPI End -->
-
-    <!-- x402 Server Starter -->
-    <dependency>
-      <groupId>ai.saharalabs.x402-function</groupId>
-      <artifactId>x402-spring-boot-starter</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-    <!-- x402 Server Starter End -->
-
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>${lombok.version}</version>
-      <scope>provided</scope>
-      <optional>true</optional>
-    </dependency>
-
-    <!--JSR 303-->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-validation</artifactId>
-    </dependency>
-    <!--JSR 303 end-->
 
     <!-- Spring Boot Dependencies -->
     <dependency>
@@ -56,10 +29,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.15.4</version>
-      <scope>compile</scope>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
@@ -68,7 +40,25 @@
       <optional>true</optional>
     </dependency>
     <!-- Spring Boot Dependencies End -->
+
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
   </dependencies>
+
 
   <dependencyManagement>
     <dependencies>
@@ -80,6 +70,7 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!-- Spring Framework dependencies end -->
     </dependencies>
   </dependencyManagement>
 
