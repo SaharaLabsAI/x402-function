@@ -41,17 +41,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HiveDeployer implements IDeployVendor {
 
-  private static final String VENDOR_ID = "hive";
-
   private final HiveHttpClient hiveHttpClient;
 
   public HiveDeployer(HiveHttpClient hiveHttpClient) {
     this.hiveHttpClient = hiveHttpClient;
-  }
-
-  @Override
-  public String getVendorId() {
-    return VENDOR_ID;
   }
 
   @Override
