@@ -62,6 +62,12 @@ public class DemoController {
 - Payment requirements can be set globally or per endpoint using the `@X402Payment` annotation.
 - The interceptor verifies and settles payments using the configured facilitator client.
 
+## Protocol Specification
+
+Refer to
+the [x402 Protocol Specification](https://github.com/coinbase/x402/blob/main/specs/x402-specification.md)
+for details.
+
 ## License
 
 See the LICENSE file for details.
