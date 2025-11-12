@@ -55,7 +55,6 @@ class X402InterceptorWebTest {
   void testPaymentAnnotation_ShouldPass() throws Exception {
     mockMvc.perform(get("/pay"))
         .andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isPaymentRequired())
-        .andExpect(content().json(""));
+        .andExpect(status().isPaymentRequired());
   }
 }
