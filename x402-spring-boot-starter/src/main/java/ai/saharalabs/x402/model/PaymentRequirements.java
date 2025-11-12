@@ -29,20 +29,65 @@ package ai.saharalabs.x402.model;
 import java.util.Map;
 
 /**
- * Defines one acceptable way to pay for a resource.
+ * Defines an acceptable way to pay for a resource. Matches the x402 PaymentRequirements schema.
+ *
+ * @see <a href="https://github.com/coinbase/x402/blob/main/specs/x402-specification.md">X402
+ * Protocol Specification</a>
  */
 public class PaymentRequirements {
 
-  public String scheme;              // e.g. "exact"
-  public String network;             // e.g. "base-sepolia"
-  public String maxAmountRequired;   // uint256 in wei / atomic units
-  public String resource;            // URL path the client is paying for
-  public String description;
-  public String mimeType;            // expected response MIME
-  public Map<String, Object> outputSchema; // optional JSON schema
-  public String payTo;               // address (EVM / Solana etc.)
-  public int maxTimeoutSeconds;
-  public String asset;               // token contract address / symbol
-  public Map<String, Object> extra;  // scheme‑specific
-}
+  /**
+   * Payment scheme identifier (e.g., "exact"). Required.
+   */
+  public String scheme;
 
+  /**
+   * Blockchain network identifier (e.g., "base-sepolia", "ethereum-mainnet"). Required.
+   */
+  public String network;
+
+  /**
+   * Required payment amount in atomic token units. Required.
+   */
+  public String maxAmountRequired;
+
+  /**
+   * Token contract address. Required.
+   */
+  public String asset;
+
+  /**
+   * Recipient wallet address for the payment. Required.
+   */
+  public String payTo;
+
+  /**
+   * URL of the protected resource. Required.
+   */
+  public String resource;
+
+  /**
+   * Human-readable description of the resource. Required.
+   */
+  public String description;
+
+  /**
+   * MIME type of the expected response. Optional.
+   */
+  public String mimeType;
+
+  /**
+   * JSON schema describing the response format. Optional.
+   */
+  public Map<String, Object> outputSchema;
+
+  /**
+   * Maximum time allowed for payment completion. Required.
+   */
+  public int maxTimeoutSeconds;
+
+  /**
+   * Scheme-specific additional information. Optional.
+   */
+  public Map<String, Object> extra;
+}

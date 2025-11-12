@@ -28,25 +28,17 @@ package ai.saharalabs.x402.model;
 
 /**
  * Identifies a payment scheme+network pair that a facilitator supports.
+ *
+ * @param scheme  Payment scheme identifier (e.g. "exact").
+ * @param network Network identifier (e.g. "base-sepolia").
  */
-public class Kind {
-
-  /**
-   * Payment scheme identifier (e.g. "exact").
-   */
-  public final String scheme;
-
-  /**
-   * Network identifier (e.g. "base-sepolia").
-   */
-  public final String network;
+public record Kind(String scheme, String network) {
 
   /**
    * Default constructor for Jackson deserialization.
    */
   public Kind() {
-    this.scheme = null;
-    this.network = null;
+    this(null, null);
   }
 
   /**
@@ -55,8 +47,6 @@ public class Kind {
    * @param scheme  the payment scheme identifier
    * @param network the network identifier
    */
-  public Kind(String scheme, String network) {
-    this.scheme = scheme;
-    this.network = network;
+  public Kind {
   }
 }

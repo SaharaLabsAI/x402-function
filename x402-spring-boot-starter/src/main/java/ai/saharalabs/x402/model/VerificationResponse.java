@@ -28,6 +28,9 @@ package ai.saharalabs.x402.model;
 
 /**
  * JSON returned by POST /verify on the facilitator.
+ *
+ * @see <a href="https://github.com/coinbase/x402/blob/main/specs/x402-specification.md">X402
+ * Protocol Specification</a>
  */
 public class VerificationResponse {
 
@@ -40,5 +43,10 @@ public class VerificationResponse {
    * Reason for verification failure (if isValid is false).
    */
   public String invalidReason;
+
+  /**
+   * Address of the payer's wallet
+   */
+  public String payer;
 }
 

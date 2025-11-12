@@ -31,6 +31,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 /**
  * Settlement response header that gets base64-encoded into X-PAYMENT-RESPONSE. Matches the
  * structure of Go SettleResponse and TypeScript SettleResponse.
+ *
+ * @see <a href="https://github.com/coinbase/x402/blob/main/specs/x402-specification.md">X402
+ * Protocol Specification</a>
  */
 @JsonInclude(JsonInclude.Include.ALWAYS) // Always include all fields, even nulls
 public class SettlementResponseHeader {
@@ -41,17 +44,17 @@ public class SettlementResponseHeader {
   public boolean success;
 
   /**
-   * Transaction hash of the settled payment.
+   * Blockchain transaction hash (empty string if settlement failed)
    */
   public String transaction;
 
   /**
-   * Network ID where the settlement occurred.
+   * Blockchain network identifier
    */
   public String network;
 
   /**
-   * Wallet address of the person who made the payment (can be null).
+   * Address of the payer's wallet
    */
   public String payer;
 

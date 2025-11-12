@@ -33,17 +33,39 @@ import java.util.Base64;
 import java.util.Map;
 
 /**
- * Base header object encoded into X-PAYMENT.
+ * Base64-encoded JSON object carried in the X-PAYMENT request header. Fields follow the x402
+ * “PaymentPayload” schema.
+ *
+ * @see <a href="https://github.com/coinbase/x402/blob/main/specs/x402-specification.md">X402
+ * Protocol Specification</a>
  */
 public class PaymentPayload {
 
+  /**
+   * x402 protocol version. Integer. Must be a supported version (currently 1).
+   */
   public int x402Version;
-  public String scheme;
-  public String network;
-  public Map<String, Object> payload; // scheme‑specific map
 
   /**
-   * Decode from the header.
+   * Payment scheme identifier. Must equal the selected paymentRequirements.scheme.
+   */
+  public String scheme;
+
+  /**
+   * Blockchain network identifier. Must equal paymentRequirements.network (e.g., "base",
+   * "base-sepolia").
+   */
+  public String network;
+
+  /**
+   * Scheme-specific payload object. Structure depends on the chosen scheme and network. For EVM
+   * "exact", uses an ERC-3009 authorization payload.
+   */
+  public Map<String, Object> payload;
+
+  /**
+   * Decode from an X-PAYMENT header value. Step 1: Base64 decode. Step 2: JSON deserialize into
+   * this type.
    */
   public static PaymentPayload fromHeader(String header) throws IOException {
     byte[] decoded = Base64.getDecoder().decode(header);
@@ -51,7 +73,7 @@ public class PaymentPayload {
   }
 
   /**
-   * Serialise and base64‑encode for the X‑PAYMENT header.
+   * Serialize to JSON and Base64-encode for use as the X-PAYMENT header value.
    */
   public String toHeader() {
     try {

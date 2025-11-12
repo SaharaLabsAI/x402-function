@@ -31,6 +31,9 @@ import java.util.List;
 
 /**
  * HTTP 402 response body returned by an x402-enabled server.
+ *
+ * @see <a href="https://github.com/coinbase/x402/blob/main/specs/x402-specification.md">X402
+ * Protocol Specification</a>
  */
 public class PaymentRequiredResponse {
 

@@ -176,7 +176,8 @@ public class X402Interceptor implements HandlerInterceptor {
           request.getRequestURL().toString(), header, Json.MAPPER.writeValueAsString(sr));
       if (sr == null || !sr.success) {
         if (!response.isCommitted()) {
-          String errorMsg = (sr != null && sr.error != null) ? sr.error : "settlement failed";
+          String errorMsg =
+              (sr != null && sr.errorReason != null) ? sr.errorReason : "settlement failed";
           log.error("x402 settlement failed URL: {} header: {} error: {}",
               request.getRequestURL().toString(), header, errorMsg);
           respond402(response, requirements, errorMsg);
@@ -188,6 +189,7 @@ public class X402Interceptor implements HandlerInterceptor {
         String payer = extractPayerFromPayload(payload);
         String base64Header = createPaymentResponseHeader(sr, payer);
         response.setHeader("X-PAYMENT-RESPONSE", base64Header);
+        // Set CORS header to expose X-PAYMENT-RESPONSE to browser clients
         response.setHeader("Access-Control-Expose-Headers", "X-PAYMENT-RESPONSE");
       } catch (Exception buildEx) {
         log.error("x402 settlement error creating response header URL: {} header: {}",
@@ -230,7 +232,7 @@ public class X402Interceptor implements HandlerInterceptor {
 
   private String createPaymentResponseHeader(SettlementResponse sr, String payer) throws Exception {
     SettlementResponseHeader settlementHeader = new SettlementResponseHeader(true,
-        sr.txHash != null ? sr.txHash : "", sr.networkId != null ? sr.networkId : "", payer);
+        sr.transaction != null ? sr.transaction : "", sr.network != null ? sr.network : "", payer);
 
     String jsonString = Json.MAPPER.writeValueAsString(settlementHeader);
     return Base64.getEncoder().encodeToString(jsonString.getBytes(StandardCharsets.UTF_8));

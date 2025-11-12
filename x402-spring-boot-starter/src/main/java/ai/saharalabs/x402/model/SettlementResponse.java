@@ -28,6 +28,9 @@ package ai.saharalabs.x402.model;
 
 /**
  * JSON returned by POST /settle on the facilitator.
+ *
+ * @see <a href="https://github.com/coinbase/x402/blob/main/specs/x402-specification.md">X402
+ * Protocol Specification</a>
  */
 public class SettlementResponse {
 
@@ -37,17 +40,17 @@ public class SettlementResponse {
   public boolean success;
 
   /**
-   * Error message if settlement failed.
+   * Error reason if settlement failed (omitted if successful)
    */
-  public String error;
+  public String errorReason;
 
   /**
-   * Transaction hash of the settled payment.
+   * Blockchain transaction hash (empty string if settlement failed)
    */
-  public String txHash;
+  public String transaction;
 
   /**
-   * Network ID where the settlement occurred.
+   * Blockchain network identifier
    */
-  public String networkId;
+  public String network;
 }
