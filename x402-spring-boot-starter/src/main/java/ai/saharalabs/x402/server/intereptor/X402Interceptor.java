@@ -50,13 +50,11 @@ import java.util.Map;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Slf4j
-@Component
 public class X402Interceptor implements HandlerInterceptor {
 
   private static final String ATTR_REQUIREMENTS = "x402.payment.requirements";
