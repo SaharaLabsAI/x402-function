@@ -77,6 +77,11 @@ public class X402Configuration {
   private Map<String, Object> outputSchema;
 
   /**
+   * Number of decimals of the token
+   */
+  private Integer assetDecimals;
+
+  /**
    * Facilitator base URL. e.g. https://facilitator.example.com
    */
   private String facilitatorBaseUrl;
