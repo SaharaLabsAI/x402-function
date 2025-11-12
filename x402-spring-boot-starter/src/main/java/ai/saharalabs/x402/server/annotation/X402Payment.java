@@ -43,4 +43,6 @@ public @interface X402Payment {
   String price();
 
   String payTo() default "";
+
+  String description() default "";
 }

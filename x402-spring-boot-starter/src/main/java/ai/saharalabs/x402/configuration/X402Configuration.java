@@ -26,15 +26,25 @@
 
 package ai.saharalabs.x402.configuration;
 
+import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "x402")
+@Getter
+@Setter
 public class X402Configuration {
 
   /**
    * Whether to enable X402 payment interception
    */
   private boolean enabled = false;
+
+  /**
+   * Payment scheme identifier (e.g., "exact")
+   */
+  private String scheme = "exact";
 
   /**
    * Default payee address, can be overridden by @X402Payment.payTo
@@ -47,9 +57,9 @@ public class X402Configuration {
   private String network = "base-sepolia";
 
   /**
-   * Token symbol, e.g. USDC
+   * Token contract address. e.g. USDC address.
    */
-  private String asset = "USDC";
+  private String asset = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
 
   /**
    * Maximum payment waiting time (seconds)
@@ -57,57 +67,22 @@ public class X402Configuration {
   private int maxTimeoutSeconds = 30;
 
   /**
+   * MIME type of the expected response
+   */
+  private String mimeType;
+
+  /**
+   * JSON schema describing the response format
+   */
+  private Map<String, Object> outputSchema;
+
+  /**
    * Facilitator base URL. e.g. https://facilitator.example.com
    */
   private String facilitatorBaseUrl;
 
-  // getter / setter
-
-  public boolean isEnabled() {
-    return enabled;
-  }
-
-  public void setEnabled(boolean enabled) {
-    this.enabled = enabled;
-  }
-
-  public String getDefaultPayTo() {
-    return defaultPayTo;
-  }
-
-  public void setDefaultPayTo(String defaultPayTo) {
-    this.defaultPayTo = defaultPayTo;
-  }
-
-  public String getNetwork() {
-    return network;
-  }
-
-  public void setNetwork(String network) {
-    this.network = network;
-  }
-
-  public String getAsset() {
-    return asset;
-  }
-
-  public void setAsset(String asset) {
-    this.asset = asset;
-  }
-
-  public int getMaxTimeoutSeconds() {
-    return maxTimeoutSeconds;
-  }
-
-  public void setMaxTimeoutSeconds(int maxTimeoutSeconds) {
-    this.maxTimeoutSeconds = maxTimeoutSeconds;
-  }
-
-  public String getFacilitatorBaseUrl() {
-    return facilitatorBaseUrl;
-  }
-
-  public void setFacilitatorBaseUrl(String facilitatorBaseUrl) {
-    this.facilitatorBaseUrl = facilitatorBaseUrl;
-  }
+  /**
+   * JSON schema describing the response format Optional
+   */
+  private Map<String, Object> extra;
 }

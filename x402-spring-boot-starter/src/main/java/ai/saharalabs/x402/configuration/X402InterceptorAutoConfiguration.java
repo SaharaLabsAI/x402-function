@@ -62,13 +62,10 @@ public class X402InterceptorAutoConfiguration {
     return new WebMvcConfigurer() {
       @Override
       public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new X402Interceptor(
-            properties.getDefaultPayTo(),
-            properties.getNetwork(),
-            properties.getAsset(),
-            properties.getMaxTimeoutSeconds(),
-            facilitatorClient
-        ));
+        registry.addInterceptor(new X402Interceptor(properties.getScheme(),
+            properties.getDefaultPayTo(), properties.getNetwork(), properties.getAsset(),
+            properties.getMaxTimeoutSeconds(), properties.getMimeType(),
+            properties.getOutputSchema(), properties.getExtra(), facilitatorClient));
       }
     };
   }

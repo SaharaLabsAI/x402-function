@@ -45,9 +45,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
@@ -61,19 +59,30 @@ public class X402Interceptor implements HandlerInterceptor {
   private static final String ATTR_HEADER = "x402.payment.header";
   private static final String ATTR_PAYLOAD = "x402.payment.payload";
 
+  private final String scheme;
   private final String defaultPayTo;
-  private final String network;            // e.g. "base-sepolia"
-  private final String asset;              // e.g.  "0x..."
-  private final int maxTimeoutSeconds;  // e.g. 30
+  private final String network;
+  private final String asset;
+  private final int maxTimeoutSeconds;
+  private final String mimeType;
+  private final Map<String, Object> outputSchema;
+  private final Map<String, Object> extra;
+
+
   private final FacilitatorClient facilitator;
 
-  public X402Interceptor(String defaultPayTo, String network, String asset, int maxTimeoutSeconds,
-      FacilitatorClient facilitator) {
-    this.defaultPayTo = Objects.requireNonNull(defaultPayTo);
-    this.network = Objects.requireNonNull(network);
-    this.asset = Objects.requireNonNull(asset);
+  public X402Interceptor(String scheme, String defaultPayTo, String network, String asset,
+      int maxTimeoutSeconds, String mimeType, Map<String, Object> outputSchema,
+      Map<String, Object> extra, FacilitatorClient facilitator) {
+    this.scheme = scheme;
+    this.defaultPayTo = defaultPayTo;
+    this.network = network;
+    this.asset = asset;
     this.maxTimeoutSeconds = maxTimeoutSeconds;
-    this.facilitator = Objects.requireNonNull(facilitator);
+    this.mimeType = mimeType;
+    this.extra = extra;
+    this.outputSchema = outputSchema;
+    this.facilitator = facilitator;
   }
 
   /* ======================== preHandle: /verify ======================== */
@@ -264,21 +273,17 @@ public class X402Interceptor implements HandlerInterceptor {
     String payTo = StringUtils.hasText(ann.payTo()) ? ann.payTo() : defaultPayTo;
 
     PaymentRequirements pr = new PaymentRequirements();
-    pr.scheme = "exact";
+    pr.scheme = scheme;
     pr.network = network;
     pr.maxAmountRequired = priceDecimal.toPlainString();
     pr.asset = asset;
-    pr.description = "";
+    pr.description = ann.description();
     pr.resource = path;
-    pr.mimeType = "application/json";
+    pr.mimeType = mimeType;
     pr.payTo = payTo;
     pr.maxTimeoutSeconds = maxTimeoutSeconds;
-    HashMap<String, Object> extra = new HashMap<>();
-    // TODO only support USDC. Make this configurable?
-    extra.put("name", "USDC");
-    extra.put("version", "2");
-    pr.outputSchema = new HashMap<>();
     pr.extra = extra;
+    pr.outputSchema = outputSchema;
     return pr;
   }
 
