@@ -24,29 +24,27 @@
  * SOFTWARE.
  */
 
-package ai.saharalabs.x402.server.annotation;
+package ai.saharalabs.x402.server.price;
 
-import ai.saharalabs.x402.server.price.DefaultPriceCalculator;
-import ai.saharalabs.x402.server.price.IPriceCalculator;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
-@Target({ElementType.METHOD, ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface X402Payment {
+@Component
+public class PriceCalculatorHelper {
 
-  /**
-   * "10000" = 0.01 USDC(6 decimals)
-   */
-  String price() default "";
+  private final ApplicationContext applicationContext;
 
-  String payTo() default "";
+  public PriceCalculatorHelper(ApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
+  }
 
-  String description() default "";
+  public String calculate(HttpServletRequest request,
+      final Class<? extends IPriceCalculator> priceCalculatorClass) {
+    return getBean(priceCalculatorClass).calculatePrice(request);
+  }
 
-  Class<? extends IPriceCalculator> priceCalculator() default DefaultPriceCalculator.class;
+  private IPriceCalculator getBean(final Class<? extends IPriceCalculator> priceCalculatorClass) {
+    return applicationContext.getBean(priceCalculatorClass);
+  }
 }

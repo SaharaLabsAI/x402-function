@@ -29,12 +29,14 @@ package ai.saharalabs.x402.configuration;
 import ai.saharalabs.x402.server.facilitator.FacilitatorClient;
 import ai.saharalabs.x402.server.facilitator.HttpFacilitatorClient;
 import ai.saharalabs.x402.server.intereptor.X402Interceptor;
+import ai.saharalabs.x402.server.price.PriceCalculatorHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -46,6 +48,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ConditionalOnProperty(prefix = "x402", name = "enabled", havingValue = "true")
 @Slf4j
 public class X402InterceptorAutoConfiguration {
+
+  @ConditionalOnMissingBean
+  @Bean
+  public PriceCalculatorHelper priceCalculatorHelper(ApplicationContext applicationContext) {
+    if (null == applicationContext) {
+      throw new IllegalStateException(
+          "x402 is enabled but no application context provided");
+    }
+    return new PriceCalculatorHelper(applicationContext);
+  }
 
   @ConditionalOnMissingBean
   @Bean
@@ -64,14 +76,15 @@ public class X402InterceptorAutoConfiguration {
   @Bean
   @ConditionalOnMissingBean
   public X402Interceptor x402Interceptor(X402Configuration properties,
-      FacilitatorClient facilitatorClient) {
+      FacilitatorClient facilitatorClient, PriceCalculatorHelper priceCalculatorHelper) {
     X402Interceptor.Builder builder = new X402Interceptor.Builder()
         .scheme(properties.getScheme())
         .defaultPayTo(properties.getDefaultPayTo())
         .network(properties.getNetwork())
         .asset(properties.getAsset())
         .maxTimeoutSeconds(properties.getMaxTimeoutSeconds())
-        .facilitator(facilitatorClient);
+        .facilitator(facilitatorClient)
+        .priceCalculatorHelper(priceCalculatorHelper);
     if (properties.getMimeType() != null) {
       builder.mimeType(properties.getMimeType());
     }

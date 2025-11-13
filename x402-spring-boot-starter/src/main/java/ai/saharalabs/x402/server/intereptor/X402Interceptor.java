@@ -34,6 +34,7 @@ import ai.saharalabs.x402.model.SettlementResponseHeader;
 import ai.saharalabs.x402.model.VerificationResponse;
 import ai.saharalabs.x402.server.annotation.X402Payment;
 import ai.saharalabs.x402.server.facilitator.FacilitatorClient;
+import ai.saharalabs.x402.server.price.PriceCalculatorHelper;
 import ai.saharalabs.x402.util.Json;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -102,6 +103,7 @@ public class X402Interceptor implements HandlerInterceptor {
   private final Map<String, Object> extra;
   private final FacilitatorClient facilitator;
   private final int assetDecimals;
+  private final PriceCalculatorHelper priceCalculatorHelper;
 
   /**
    * Creates an interceptor that enforces x402 payment verification & settlement.
@@ -109,9 +111,10 @@ public class X402Interceptor implements HandlerInterceptor {
    */
   public X402Interceptor(String scheme, String defaultPayTo, String network, String asset,
       int maxTimeoutSeconds, @Nullable String mimeType, @Nullable Map<String, Object> outputSchema,
-      @Nullable Map<String, Object> extra, FacilitatorClient facilitator) {
+      @Nullable Map<String, Object> extra, FacilitatorClient facilitator,
+      PriceCalculatorHelper priceCalculatorHelper) {
     this(scheme, defaultPayTo, network, asset, maxTimeoutSeconds, mimeType, outputSchema, extra,
-        DEFAULT_ASSET_DECIMALS, facilitator);
+        DEFAULT_ASSET_DECIMALS, facilitator, priceCalculatorHelper);
   }
 
   /**
@@ -119,7 +122,8 @@ public class X402Interceptor implements HandlerInterceptor {
    */
   public X402Interceptor(String scheme, String defaultPayTo, String network, String asset,
       int maxTimeoutSeconds, @Nullable String mimeType, @Nullable Map<String, Object> outputSchema,
-      @Nullable Map<String, Object> extra, int assetDecimals, FacilitatorClient facilitator) {
+      @Nullable Map<String, Object> extra, int assetDecimals, FacilitatorClient facilitator,
+      PriceCalculatorHelper priceCalculatorHelper) {
     this.scheme = scheme;
     this.defaultPayTo = defaultPayTo;
     this.network = network;
@@ -130,6 +134,7 @@ public class X402Interceptor implements HandlerInterceptor {
     this.outputSchema = outputSchema;
     this.facilitator = facilitator;
     this.assetDecimals = assetDecimals <= 0 ? DEFAULT_ASSET_DECIMALS : assetDecimals;
+    this.priceCalculatorHelper = priceCalculatorHelper;
   }
 
   @Override
@@ -141,7 +146,7 @@ public class X402Interceptor implements HandlerInterceptor {
     }
     final String url = request.getRequestURL().toString();
 
-    PaymentRequirements requirements = buildRequirements(url, annotation);
+    PaymentRequirements requirements = buildRequirements(request, url, annotation);
 
     String header = request.getHeader(HEADER_PAYMENT);
     if (!StringUtils.hasText(header)) {
@@ -355,13 +360,21 @@ public class X402Interceptor implements HandlerInterceptor {
   /**
    * Build immutable payment requirements for the request + annotation.
    */
-  private PaymentRequirements buildRequirements(String path, X402Payment ann) {
+  private PaymentRequirements buildRequirements(HttpServletRequest request, String path,
+      X402Payment ann) {
     String priceStr = ann.price();
-    if (!StringUtils.hasText(priceStr)) {
-      throw new IllegalStateException("@X402Payment.price must not be empty");
+//    if (!StringUtils.hasText(priceStr)) {
+//      throw new IllegalStateException("@X402Payment.price must not be empty");
+//    }
+    if (!StringUtils.hasText(priceStr) && ann.priceCalculator() == null) {
+      throw new IllegalStateException(
+          "Either @X402Payment.price or @X402Payment.priceCalculator must be provided and non-empty.");
     }
 
-    BigDecimal atomic = toAtomicUnits(priceStr);
+    // Use price if annotation price provided
+    BigDecimal atomic = StringUtils.hasText(priceStr) ? toAtomicUnits(priceStr)
+        : toAtomicUnits(priceCalculatorHelper.calculate(request, ann.priceCalculator()));
+
     String payTo = StringUtils.hasText(ann.payTo()) ? ann.payTo() : defaultPayTo;
 
     PaymentRequirements pr = new PaymentRequirements();
@@ -403,6 +416,7 @@ public class X402Interceptor implements HandlerInterceptor {
     private Map<String, Object> outputSchema;
     private Map<String, Object> extra;
     private FacilitatorClient facilitator;
+    private PriceCalculatorHelper priceCalculatorHelper;
 
     public Builder scheme(String v) {
       this.scheme = v;
@@ -454,6 +468,11 @@ public class X402Interceptor implements HandlerInterceptor {
       return this;
     }
 
+    public Builder priceCalculatorHelper(PriceCalculatorHelper v) {
+      this.priceCalculatorHelper = v;
+      return this;
+    }
+
     public X402Interceptor build() {
       if (scheme == null || network == null || asset == null || defaultPayTo == null
           || facilitator == null) {
@@ -461,7 +480,7 @@ public class X402Interceptor implements HandlerInterceptor {
             "Missing required builder fields (scheme, network, asset, defaultPayTo, facilitator)");
       }
       return new X402Interceptor(scheme, defaultPayTo, network, asset, maxTimeoutSeconds, mimeType,
-          outputSchema, extra, assetDecimals, facilitator);
+          outputSchema, extra, assetDecimals, facilitator, priceCalculatorHelper);
     }
   }
 }

@@ -24,29 +24,16 @@
  * SOFTWARE.
  */
 
-package ai.saharalabs.x402.server.annotation;
+package ai.saharalabs.x402.server.price;
 
-import ai.saharalabs.x402.server.price.DefaultPriceCalculator;
-import ai.saharalabs.x402.server.price.IPriceCalculator;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
 
-@Target({ElementType.METHOD, ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface X402Payment {
+@Component
+public class DefaultPriceCalculator implements IPriceCalculator {
 
-  /**
-   * "10000" = 0.01 USDC(6 decimals)
-   */
-  String price() default "";
-
-  String payTo() default "";
-
-  String description() default "";
-
-  Class<? extends IPriceCalculator> priceCalculator() default DefaultPriceCalculator.class;
+  @Override
+  public String calculatePrice(HttpServletRequest request) {
+    throw new UnsupportedOperationException("Not implemented");
+  }
 }
