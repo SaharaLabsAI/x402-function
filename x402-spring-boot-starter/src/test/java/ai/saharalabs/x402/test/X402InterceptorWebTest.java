@@ -24,16 +24,19 @@
  * SOFTWARE.
  */
 
-package ai.saharalabs.x402.server.intereptor;
+package ai.saharalabs.x402.test;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
@@ -56,5 +59,31 @@ class X402InterceptorWebTest {
     mockMvc.perform(get("/pay"))
         .andDo(MockMvcResultHandlers.print())
         .andExpect(status().isPaymentRequired());
+  }
+
+  @Test
+  void testPaymentAnnotationWithPriceCalculator_ShouldPass() throws Exception {
+    mockMvc.perform(get("/price"))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(status().isPaymentRequired())
+        .andExpect(jsonPath("$.accepts[0].maxAmountRequired").value("120000"));
+  }
+
+  @Test
+  void testPaymentAnnotationWithParamPriceCalculator_ShouldPass() throws Exception {
+    mockMvc.perform(get("/paramPrice").param("param", "1"))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(status().isPaymentRequired())
+        .andExpect(jsonPath("$.accepts[0].maxAmountRequired").value("110000"));
+  }
+
+  @Test
+  void testPaymentAnnotationWithBodyPriceCalculator_ShouldPass() throws Exception {
+    mockMvc.perform(post("/bodyPrice")
+            .content("{\"price\":\"0.03\"}")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(status().isPaymentRequired())
+        .andExpect(jsonPath("$.accepts[0].maxAmountRequired").value("30000"));
   }
 }

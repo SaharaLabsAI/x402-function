@@ -24,19 +24,17 @@
  * SOFTWARE.
  */
 
-package ai.saharalabs.x402.server.intereptor;
+package ai.saharalabs.x402.function.demo.controller;
 
-import ai.saharalabs.x402.server.facilitator.FacilitatorClient;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import ai.saharalabs.x402.server.price.IPriceCalculator;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
 
-@Configuration
-public class X402InterceptorTestConfig {
+@Component
+public class TestCalculator implements IPriceCalculator {
 
-  @Bean
-  @Primary
-  public FacilitatorClient facilitatorClient() {
-    return org.mockito.Mockito.mock(FacilitatorClient.class);
+  @Override
+  public String calculatePrice(HttpServletRequest request) {
+    return "0.02";
   }
 }

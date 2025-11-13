@@ -24,45 +24,21 @@
  * SOFTWARE.
  */
 
-package ai.saharalabs.x402.controller;
+package ai.saharalabs.x402.test;
 
-import ai.saharalabs.x402.server.annotation.X402Payment;
-import ai.saharalabs.x402.test.BodyPriceCalculator;
-import ai.saharalabs.x402.test.ParamPriceCalculator;
-import ai.saharalabs.x402.test.TestPriceCalculator;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import ai.saharalabs.x402.server.price.IPriceCalculator;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
 
-@RestController
-public class TestController {
+@Component
+public class ParamPriceCalculator implements IPriceCalculator {
 
-  @GetMapping("/hi")
-  public String hi() {
-    return "hi!";
-  }
-
-  @X402Payment(price = "0.01")
-  @GetMapping("/pay")
-  public String pay() {
-    return "Payment";
-  }
-
-  @GetMapping("/price")
-  @X402Payment(priceCalculator = TestPriceCalculator.class)
-  public String price() {
-    return "price";
-  }
-
-  @GetMapping("/paramPrice")
-  @X402Payment(priceCalculator = ParamPriceCalculator.class)
-  public String paramPrice() {
-    return "price";
-  }
-
-  @PostMapping("/bodyPrice")
-  @X402Payment(priceCalculator = BodyPriceCalculator.class)
-  public String bodyPrice() {
-    return "price";
+  @Override
+  public String calculatePrice(HttpServletRequest request) {
+    String param = request.getParameter("param");
+    if ("1".equals(param)) {
+      return "0.11";
+    }
+    return "0.02";
   }
 }
