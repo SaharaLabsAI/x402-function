@@ -29,6 +29,7 @@ package ai.saharalabs.x402.configuration;
 import ai.saharalabs.x402.server.facilitator.FacilitatorClient;
 import ai.saharalabs.x402.server.facilitator.HttpFacilitatorClient;
 import ai.saharalabs.x402.server.intereptor.X402Interceptor;
+import ai.saharalabs.x402.server.intereptor.X402Interceptor.X402InterceptorBuilder;
 import ai.saharalabs.x402.server.price.PriceCalculatorHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -77,34 +78,25 @@ public class X402InterceptorAutoConfiguration {
   @ConditionalOnMissingBean
   public X402Interceptor x402Interceptor(X402Configuration properties,
       FacilitatorClient facilitatorClient, PriceCalculatorHelper priceCalculatorHelper) {
-    X402Interceptor.Builder builder = new X402Interceptor.Builder()
-        .scheme(properties.getScheme())
-        .defaultPayTo(properties.getDefaultPayTo())
-        .network(properties.getNetwork())
-        .asset(properties.getAsset())
-        .maxTimeoutSeconds(properties.getMaxTimeoutSeconds())
-        .facilitator(facilitatorClient)
-        .priceCalculatorHelper(priceCalculatorHelper);
-    if (properties.getMimeType() != null) {
-      builder.mimeType(properties.getMimeType());
-    }
-    if (properties.getOutputSchema() != null) {
-      builder.outputSchema(properties.getOutputSchema());
-    }
-    if (properties.getExtra() != null) {
-      builder.extra(properties.getExtra());
-    }
-    if (properties.getAssetDecimals() != null) {
-      builder.assetDecimals(properties.getAssetDecimals());
-    }
-
+    X402InterceptorBuilder builder = X402Interceptor.builder();
+    builder.facilitator(facilitatorClient);
+    builder.priceCalculatorHelper(priceCalculatorHelper);
+    builder.x402Configuration(properties);
     X402Interceptor interceptor = builder.build();
     log.info(
-        "x402 interceptor initialized scheme={} network={} asset={} decimals={} payTo={} timeoutSeconds={} facilitatorBaseUrl={}",
-        properties.getScheme(), properties.getNetwork(), properties.getAsset(),
-        properties.getAssetDecimals() != null ? properties.getAssetDecimals() : "(default)",
-        properties.getDefaultPayTo(), properties.getMaxTimeoutSeconds(),
-        properties.getFacilitatorBaseUrl());
+        "x402 interceptor initialized enabled={} scheme={} network={} asset={} decimals={} payTo={} timeoutSeconds={} facilitatorBaseUrl={} mimeType={} outputSchemaSize={} priceCalculatorHelper={} beanClass={}",
+        true,
+        properties.getScheme(),
+        properties.getNetwork(),
+        properties.getAsset(),
+        properties.getAssetDecimals(),
+        properties.getDefaultPayTo(),
+        properties.getMaxTimeoutSeconds(),
+        properties.getFacilitatorBaseUrl(),
+        properties.getMimeType(),
+        properties.getExtra(),
+        priceCalculatorHelper.getClass().getSimpleName(),
+        interceptor.getClass().getName());
     return interceptor;
   }
 

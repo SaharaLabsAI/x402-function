@@ -26,6 +26,7 @@
 
 package ai.saharalabs.x402.server.intereptor;
 
+import ai.saharalabs.x402.configuration.X402Configuration;
 import ai.saharalabs.x402.model.PaymentPayload;
 import ai.saharalabs.x402.model.PaymentRequiredResponse;
 import ai.saharalabs.x402.model.PaymentRequirements;
@@ -42,7 +43,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Map;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -51,6 +54,9 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Slf4j
+@Getter
+@Setter
+@Builder
 public class X402Interceptor implements HandlerInterceptor {
 
   /**
@@ -89,53 +95,9 @@ public class X402Interceptor implements HandlerInterceptor {
    */
   private static final String ATTR_PAYLOAD = "x402.payment.payload";
 
-  // -------------------- Configuration (immutable) --------------------
-  private final String scheme;
-  private final String defaultPayTo;
-  private final String network;
-  private final String asset;
-  private final int maxTimeoutSeconds;
-  @Nullable
-  private final String mimeType;
-  @Nullable
-  private final Map<String, Object> outputSchema;
-  @Nullable
-  private final Map<String, Object> extra;
   private final FacilitatorClient facilitator;
-  private final int assetDecimals;
   private final PriceCalculatorHelper priceCalculatorHelper;
-
-  /**
-   * Creates an interceptor that enforces x402 payment verification & settlement.
-   * Backward-compatible constructor using default asset decimals (6).
-   */
-  public X402Interceptor(String scheme, String defaultPayTo, String network, String asset,
-      int maxTimeoutSeconds, @Nullable String mimeType, @Nullable Map<String, Object> outputSchema,
-      @Nullable Map<String, Object> extra, FacilitatorClient facilitator,
-      PriceCalculatorHelper priceCalculatorHelper) {
-    this(scheme, defaultPayTo, network, asset, maxTimeoutSeconds, mimeType, outputSchema, extra,
-        DEFAULT_ASSET_DECIMALS, facilitator, priceCalculatorHelper);
-  }
-
-  /**
-   * Full constructor allowing custom asset decimals.
-   */
-  public X402Interceptor(String scheme, String defaultPayTo, String network, String asset,
-      int maxTimeoutSeconds, @Nullable String mimeType, @Nullable Map<String, Object> outputSchema,
-      @Nullable Map<String, Object> extra, int assetDecimals, FacilitatorClient facilitator,
-      PriceCalculatorHelper priceCalculatorHelper) {
-    this.scheme = scheme;
-    this.defaultPayTo = defaultPayTo;
-    this.network = network;
-    this.asset = asset;
-    this.maxTimeoutSeconds = maxTimeoutSeconds;
-    this.mimeType = mimeType;
-    this.extra = extra;
-    this.outputSchema = outputSchema;
-    this.facilitator = facilitator;
-    this.assetDecimals = assetDecimals <= 0 ? DEFAULT_ASSET_DECIMALS : assetDecimals;
-    this.priceCalculatorHelper = priceCalculatorHelper;
-  }
+  private final X402Configuration x402Configuration;
 
   @Override
   public boolean preHandle(@NonNull HttpServletRequest request,
@@ -375,20 +337,21 @@ public class X402Interceptor implements HandlerInterceptor {
     BigDecimal atomic = StringUtils.hasText(priceStr) ? toAtomicUnits(priceStr)
         : toAtomicUnits(priceCalculatorHelper.calculate(request, ann.priceCalculator()));
 
-    String payTo = StringUtils.hasText(ann.payTo()) ? ann.payTo() : defaultPayTo;
+    String payTo =
+        StringUtils.hasText(ann.payTo()) ? ann.payTo() : x402Configuration.getDefaultPayTo();
 
     PaymentRequirements pr = new PaymentRequirements();
-    pr.scheme = scheme;
-    pr.network = network;
+    pr.scheme = x402Configuration.getScheme();
+    pr.network = x402Configuration.getNetwork();
     pr.maxAmountRequired = atomic.toPlainString();
-    pr.asset = asset;
+    pr.asset = x402Configuration.getAsset();
     pr.description = ann.description();
     pr.resource = path;
-    pr.mimeType = mimeType;
+    pr.mimeType = x402Configuration.getMimeType();
     pr.payTo = payTo;
-    pr.maxTimeoutSeconds = maxTimeoutSeconds;
-    pr.extra = extra;
-    pr.outputSchema = outputSchema;
+    pr.maxTimeoutSeconds = x402Configuration.getMaxTimeoutSeconds();
+    pr.extra = x402Configuration.getExtra();
+    pr.outputSchema = x402Configuration.getOutputSchema();
     return pr;
   }
 
@@ -396,91 +359,7 @@ public class X402Interceptor implements HandlerInterceptor {
    * Convert human-readable token units to atomic units based on configured decimals.
    */
   private BigDecimal toAtomicUnits(String human) {
-    return new BigDecimal(human).movePointRight(assetDecimals)
+    return new BigDecimal(human).movePointRight(x402Configuration.getAssetDecimals())
         .setScale(0, java.math.RoundingMode.DOWN);
-  }
-
-  /**
-   * Builder for {@link X402Interceptor} enabling extensibility without constructor explosion.
-   */
-  @SuppressWarnings("unused")
-  public static class Builder {
-
-    private String scheme;
-    private String defaultPayTo;
-    private String network;
-    private String asset;
-    private int maxTimeoutSeconds = 30;
-    private int assetDecimals = DEFAULT_ASSET_DECIMALS;
-    private String mimeType;
-    private Map<String, Object> outputSchema;
-    private Map<String, Object> extra;
-    private FacilitatorClient facilitator;
-    private PriceCalculatorHelper priceCalculatorHelper;
-
-    public Builder scheme(String v) {
-      this.scheme = v;
-      return this;
-    }
-
-    public Builder defaultPayTo(String v) {
-      this.defaultPayTo = v;
-      return this;
-    }
-
-    public Builder network(String v) {
-      this.network = v;
-      return this;
-    }
-
-    public Builder asset(String v) {
-      this.asset = v;
-      return this;
-    }
-
-    public Builder maxTimeoutSeconds(int v) {
-      this.maxTimeoutSeconds = v;
-      return this;
-    }
-
-    public Builder assetDecimals(int v) {
-      this.assetDecimals = v;
-      return this;
-    }
-
-    public Builder mimeType(@Nullable String v) {
-      this.mimeType = v;
-      return this;
-    }
-
-    public Builder outputSchema(@Nullable Map<String, Object> v) {
-      this.outputSchema = v;
-      return this;
-    }
-
-    public Builder extra(@Nullable Map<String, Object> v) {
-      this.extra = v;
-      return this;
-    }
-
-    public Builder facilitator(FacilitatorClient v) {
-      this.facilitator = v;
-      return this;
-    }
-
-    public Builder priceCalculatorHelper(PriceCalculatorHelper v) {
-      this.priceCalculatorHelper = v;
-      return this;
-    }
-
-    public X402Interceptor build() {
-      if (scheme == null || network == null || asset == null || defaultPayTo == null
-          || facilitator == null) {
-        throw new IllegalStateException(
-            "Missing required builder fields (scheme, network, asset, defaultPayTo, facilitator)");
-      }
-      return new X402Interceptor(scheme, defaultPayTo, network, asset, maxTimeoutSeconds, mimeType,
-          outputSchema, extra, assetDecimals, facilitator, priceCalculatorHelper);
-    }
   }
 }
