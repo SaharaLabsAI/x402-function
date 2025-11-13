@@ -26,7 +26,6 @@
 
 package ai.saharalabs.x402.server.intereptor;
 
-import ai.saharalabs.x402.model.ExactSchemePayload;
 import ai.saharalabs.x402.model.PaymentPayload;
 import ai.saharalabs.x402.model.PaymentRequiredResponse;
 import ai.saharalabs.x402.model.PaymentRequirements;
@@ -266,8 +265,7 @@ public class X402Interceptor implements HandlerInterceptor {
   private void attachSettlementHeader(HttpServletResponse response, PaymentPayload payload,
       SettlementResponse sr, String originalHeader, String url) {
     try {
-      String payer = extractPayerFromPayload(payload);
-      String base64Header = createPaymentResponseHeader(sr, payer);
+      String base64Header = createPaymentResponseHeader(sr, sr.payer);
       response.setHeader(HEADER_PAYMENT_RESPONSE, base64Header);
       response.setHeader(HEADER_ACCESS_CONTROL_EXPOSE, HEADER_PAYMENT_RESPONSE);
     } catch (Exception buildEx) {
@@ -294,29 +292,6 @@ public class X402Interceptor implements HandlerInterceptor {
       resp.flushBuffer();
     } catch (IOException e) {
       log.error("x402 error writing response status={} body={}", status, body, e);
-    }
-  }
-
-  /**
-   * Extract payer address from scheme-specific payload.
-   */
-  @Nullable
-  private String extractPayerFromPayload(PaymentPayload payload) {
-    try {
-      ExactSchemePayload exactPayload = Json.MAPPER.convertValue(payload.payload,
-          ExactSchemePayload.class);
-      return exactPayload.authorization != null ? exactPayload.authorization.from : null;
-    } catch (Exception ex) {
-      try {
-        Object authorization = payload.payload.get("authorization");
-        if (authorization instanceof Map<?, ?> map) {
-          Object from = map.get("from");
-          return from instanceof String ? (String) from : null;
-        }
-      } catch (Exception ignore) {
-        // ignore
-      }
-      return null;
     }
   }
 

@@ -53,4 +53,9 @@ public class SettlementResponse {
    * Blockchain network identifier
    */
   public String network;
+
+  /**
+   * Address of the payer's wallet
+   */
+  public String payer;
 }
