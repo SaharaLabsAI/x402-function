@@ -105,7 +105,6 @@
     <dependency>
       <artifactId>x402-function-spring-boot-starter</artifactId>
       <groupId>ai.saharalabs.x402-function</groupId>
-      <version>1.0-SNAPSHOT</version>
     </dependency>
     <!-- X402 Function Spring Boot Starter end -->
 
@@ -135,6 +134,14 @@
         <version>${knife4j.version}</version>
       </dependency>
       <!--Knife4j end-->
+
+      <dependency>
+        <artifactId>x402-function-bom</artifactId>
+        <groupId>ai.saharalabs.x402-function</groupId>
+        <scope>import</scope>
+        <type>pom</type>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
