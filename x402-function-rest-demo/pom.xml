@@ -126,6 +126,7 @@
         <type>pom</type>
         <version>${spring-boot.version}</version>
       </dependency>
+      <!-- Spring Framework dependencies end -->
 
       <!--Knife4j-->
       <dependency>
@@ -135,6 +136,7 @@
       </dependency>
       <!--Knife4j end-->
 
+      <!-- x402 function BOM -->
       <dependency>
         <artifactId>x402-function-bom</artifactId>
         <groupId>ai.saharalabs.x402-function</groupId>
@@ -142,6 +144,7 @@
         <type>pom</type>
         <version>1.0-SNAPSHOT</version>
       </dependency>
+      <!-- x402 function BOM end -->
     </dependencies>
   </dependencyManagement>
 
